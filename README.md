@@ -1,9 +1,9 @@
-[![Build Status](https://travis-ci.org/kaneplusplus/bis557.svg?branch=master)](https://travis-ci.org/kaneplusplus/bis557)
+[![Build Status](https://travis-ci.org/jbxjbx/bis557.svg?branch=master)](https://travis-ci.org/jbxjbx/bis557)
 
 BIS557
 ===
-
-This is a repository for storing all code, documentation, and digital 
+  
+  This is a repository for storing all code, documentation, and digital 
 artifacts for BIS557.
 
 So far the only thing we've done is create and document a function that
