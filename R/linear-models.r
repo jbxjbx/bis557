@@ -5,6 +5,7 @@
 #' @param data a data.frame
 #' @return An lm object
 #' @importFrom stats lm
+#' @importFrom stats model.matrix terms
 #' @examples
 #' fit <- linear_model(Sepal.Length ~., iris)
 #' summary(fit)
@@ -41,7 +42,8 @@ linear_model <- function(formula, data) {
              y = y, 
              x = x, 
              model = formula, 
-             na.action = NULL )
+             na.action = NULL,
+             qr = qr(x))
   
   #class the final list and return the result
   class(final)='lm'
