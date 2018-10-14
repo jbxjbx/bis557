@@ -2,7 +2,7 @@
 #'
 #' @description this function passes parameters to the ridge function.
 #' @param formula a formula
-#' @param lamda a parameter in numberic values
+#' @param lambda a parameter in numberic values
 #' @param data a data.frame
 #' @return An ridge regression object
 #' @importFrom stats model.matrix 
