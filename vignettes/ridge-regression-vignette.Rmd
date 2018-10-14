@@ -22,14 +22,22 @@ library(bis557)
 data(ridge_test)
 data(ridge_train)
 ```
+build the prediction function - reference to the code in class
+```{r}
+predict.ridge_reg = function(object,...) {
+  newdata = list(...)[[1]]
+  m = model.matrix(object$form, newdata)
+  m %*% object$coefficients
+}
+```
 creat the values for lambda and predict the value of MSE
 ```{r}
-lambda_value <- seq(0.01,20,0.01)
+lambda_value <- seq(0.1,100,0.1)
 mse <- c()
-for (n in 1:length(lambda_value)){
+for (n in 1:1000){
   fit <- ridge_reg(y ~., lambda_value[n], ridge_train)
   e <- predict(fit, ridge_test) - ridge_test$y
-  mse <- c(mse, e^2)
+  mse <- c(mse, mean(e^2))
 }
 ```
 return the minimum value 
