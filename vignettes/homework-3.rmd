@@ -1,0 +1,162 @@
+---
+title: <center> <h1> Homework 3 </h1> </center>
+mainfont: Arial
+author: "Boxiang Jia"
+date: November 6, 2018
+output: html_document
+runtime: shiny 
+fontsize: 12pt
+geometry: margin=1in
+self_contained: yes
+toc: true
+---
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{the homework 3}
+-->
+## Question 1 - Pg117.7 
+```{r}
+# reference to the code and help by Wenfeng Zhang, and here changed the way 
+# to build the kernel_epan and improve the value of testing h
+set.seed(123)
+x <- rnorm(1000, 0, 1)
+x.new <- sort(rnorm(1000, 0, 1))
+#build the kernel
+kernel_epan <- function(x,h) {
+ran <- as.numeric(abs(x) <= 1)
+val <- (3/4) * ( 1 - x^2 ) * ran
+return(val)
+}
+#build the function
+kern_density <- function(x, h, x.new){
+  y <- numeric()
+  for (i in 1:length(x.new)){
+    y[i] <- mean(kernel_epan((x.new[i]-x)/h))/h
+  }
+  return (y)
+}
+#Test the function
+h = c(0.1, 0.15, 0.2, 0.5,1)
+for (i in h){
+  txt <- paste("Kernal Density by h =",i) 
+  plot(x.new, kern_density(x,i,x.new), ylab = "estimated y", main = txt, type = "l")  
+}
+```
+
+## Question 2 - Pg200.3
+By definition, the function f is called convex if:
+$\forall x_1,x_2\in X$, $\forall t \in [0,1]$, 
+then we have $f(tx_1+(1-t)x_2) \le tf(x_1)+(1-t)f(x_2)$
+Assume $f$ and $g$ are convex functions, from the function above, we have the following:
+$$
+\begin{aligned}
+f(tx_1+(1-t)x_2)\le tf(x_1)+(1-t)f(x_2)\\
+g(tx_1+(1-t)x_2)\le tg(x_1)+(1-t)g(x_2)\\
+\end{aligned}
+$$
+then define the sum of the function $h(x)=f(x)+g(x)$
+$$
+\begin{aligned}
+f(t_1x_1+(1-t_1)x_2)+g(t_2x_1+(1-t_2)x_2) \le t_1f(x_1)+(1-t_1)f(x_2)+t_2g(x_1)+(1-t_2)g(x_2)\\
+h((t_1+t_2)x_1+(1-t_1-t_2)x_2) \le (t_1+t_2)(h)(x_1)+(1-t_1-t_2)h(x_2)\\
+\end{aligned}
+$$
+Let $t_3=t_1+t_2$
+$$
+h(t_3x_1+(1-t_3)x_2)\le t_3h(x_1)+(1-t_3)h(x_2)
+$$
+Hence by the definition of convex fucntion, function h is convex, so does the sum of f and g.
+
+## Question 3 - Pg200.4
+For absolute values, we have $|a+b|\le|a|+|b|$
+For $t \in [0, 1]$, we have the absolute function as:
+$$
+\begin{aligned}
+f'(x) = |f(x)|
+&=f(|tx_1+(1-t)x_2|)\\
+&\le f(|tx_1|) + f(|(1-t)x_2|)\\
+&\le tf(|x_1|)+(1-t)f(|x_2|)
+\end{aligned}
+$$
+Thus, by definition, $f'(x)$ is convex.  Now consider the norm function $l_1\ norm$
+$$
+l_1\ norm = \sum_{r=1}^{n}|X_i|,
+$$
+Because we have already proved that the sum of convex functions is also convex, hence the the infinite sum like l1-norm is also convex.
+
+## Question 4 - Pg200.5
+By defnition, the objective function of elastic net is the following:
+$$
+f(b;\lambda,\alpha)=\frac{1}{2n}||y-Xb||^2_2+\lambda((1-\alpha)\frac{1}{2}||b||^2_2+\alpha||b||_1)
+$$
+where $\lambda>0$, and $\alpha \in [0,1]$. We have already now that $l_1\ norm$ is convex, and the sum of convex functions are also convex, to prove the function is convex, we shall prove $l_2\ norm$ is also convex. Hence we assume that 
+$$
+f(x) = x^2
+$$
+to prove it is a convex function, then we have
+$$
+\begin{aligned}
+f(tx+(1-t)y)-(tf(x)+(1-t)f(y)) &= (tx+(1-t)y)^2-tx^2-(1-t)y^2\\
+&= t^2x^2 + (1-t)^2y^2+2t(1-t)xy-tx^2-(1-t)y^2\\
+&= t(t-1)x^2+t(t-1)y^2+2t(1-t)xy\\
+&=t(1-t)(-x^2-y^2+2xy)\\
+&=-t(t-1)(x-y)^2\\
+&\le 0\\
+\end{aligned}
+$$
+Because $0\leq t \leq1$, 
+$$
+f(tx+(1-t)y) \leq tf(x)+(1-t)f(y)
+$$
+Therefore, $f(x) = x^2$ is convex, and we now that the following sum of squares of convex is also convex as well.
+$$
+\lvert\lvert x \rvert\rvert_2^2 = \sum_{i=1}^n x_i^2.
+$$
+In this way, both $l_1\ norm$ and $l_2\ norm$ are proved to be convex, we can say the objective function of elastic net is also a convex function since it is a sum and multiples of l norm. 
+
+
+## Question 5 Pg200.6
+```{r}
+# Reference to the solution from Mr. Michael Kane in class.
+
+library(glmnet)
+# Find the KKT conditions
+##args:
+# X: the desgin matrix;
+# y: the response vector.
+# b: the slope coefficients of the current model;
+# lambda: the penalty parameter.
+casl_lenet_check_kkt <- function(X, y, b, lambda) {
+#calculate the residuals
+resids <- y - X %*% b
+
+#calculate the projection of each variable onto the residuals
+s <- apply(X, 2, function(xj) crossprod(xj, resids)) /
+lambda / nrow(X)
+
+# return a vector indicating where the KKT conditions have been violated by the variables that are currently zero.
+(b == 0) & (abs(s) >= 1)
+}
+
+#build the dataset and test, the way building the dataset refered to the textbook Page 200 and help by Xiangyi Shan
+set.seed(123)
+n <- 1000
+p <- 4000
+X <- matrix(rnorm(n * p), ncol = p)
+beta <- c(seq(1, 0.1, length.out=(10)), rep(0, p - 10))
+y <- X %*% beta + rnorm(n = n, sd = 0.15)
+
+#lasso regression
+lasso_reg_with_screening <- function(x, y){
+  m1 <- cv.glmnet(x,y,alpha=1)
+  lambda <- m1$lambda.1se
+  b <- m1$glmnet.fit$beta[, m1$lambda == lambda]
+ casl_lenet_check_kkt(X, y, beta, lambda)
+}
+#screen the dataset
+outcome <-lasso_reg_with_screening(X, y)
+summary(outcome)
+```
+According to the summary of the outcome, there are 3997 of False and only 3 True, hence we can conluse that there are limited KTT violation here. Lasso screening is generally a well fit. 
+
+
