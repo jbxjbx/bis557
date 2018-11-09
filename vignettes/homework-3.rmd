@@ -8,12 +8,8 @@ runtime: shiny
 fontsize: 12pt
 geometry: margin=1in
 self_contained: yes
-toc: true
 ---
-<!--
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteIndexEntry{the homework 3}
--->
+
 ## Question 1 - Pg117.7 
 ```{r}
 # reference to the code and help by Wenfeng Zhang, and here changed the way 
