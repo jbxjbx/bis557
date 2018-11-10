@@ -17,11 +17,12 @@ self_contained: yes
 set.seed(123)
 x <- rnorm(1000, 0, 1)
 x.new <- sort(rnorm(1000, 0, 1))
+
 #build the kernel
 kernel_epan <- function(x,h) {
 ran <- as.numeric(abs(x) <= 1)
 val <- (3/4) * ( 1 - x^2 ) * ran
-return(val)
+val
 }
 #build the function
 kern_density <- function(x, h, x.new){
@@ -76,7 +77,7 @@ f'(x) = |f(x)|
 $$
 Thus, by definition, $f'(x)$ is convex.  Now consider the norm function $l_1\ norm$
 $$
-l_1\ norm = \sum_{r=1}^{n}|X_i|,
+||x||_1 = \sum_{r=1}^{n}|x_i|
 $$
 Because we have already proved that the sum of convex functions is also convex, hence the the infinite sum like l1-norm is also convex.
 
@@ -104,14 +105,25 @@ Because $0\leq t \leq1$,
 $$
 f(tx+(1-t)y) \leq tf(x)+(1-t)f(y)
 $$
-Therefore, $f(x) = x^2$ is convex, and we now that the following sum of squares of convex is also convex as well.
+Therefore, $f(x) = x^2$ is convex, and we now know that the following sum of squares of convex is also convex as well.
+Becasuse $l_2\ norm$ is a square of a convex function.
 $$
-\lvert\lvert x \rvert\rvert_2^2 = \sum_{i=1}^n x_i^2.
+\lvert\lvert x \rvert\rvert_2^2 = \sum_{i=1}^n |x_i|^2.
 $$
 In this way, both $l_1\ norm$ and $l_2\ norm$ are proved to be convex, we can say the objective function of elastic net is also a convex function since it is a sum and multiples of l norm. 
 
 
 ## Question 5 Pg200.6
+From the equation from the textbook, we have that if $\alpha=1$, the optimal fitted values of b, denoted $\hat{b}$ would be such that 
+$$
+ \sum_{i=1}^{n} x_{il} \left(y_i - \sum_{j=1}^{p}x_{ij}\hat{b}_j\right) = \lambda s_l
+$$
+and for j= 1,2,3,....,p
+$$
+s_l =  1   \hat{b}_j > 0 \\
+s_1 =  -1      \hat{b}_j < 0 \\
+s_1  = [-1,1]    \hat{b}_j = 0 \\
+$$
 ```{r}
 # Reference to the solution from Mr. Michael Kane in class.
 
@@ -153,6 +165,6 @@ lasso_reg_with_screening <- function(x, y){
 outcome <-lasso_reg_with_screening(X, y)
 summary(outcome)
 ```
-According to the summary of the outcome, there are 3997 of False and only 3 True, hence we can conluse that there are limited KTT violation here. Lasso screening is generally a well fit. 
+According to the summary of the outcome, there are 3997 of False and only 3 True, hence we can conluse that there are few KTT violation here, which is in expectation. 
 
 
