@@ -1,0 +1,65 @@
+---
+title: <center> <h1> Homework 4 </h1> </center>
+mainfont: Arial
+author: "Boxiang Jia"
+date: December 4, 2018
+output: html_document
+runtime: shiny 
+fontsize: 12pt
+geometry: margin=1in
+self_contained: yes
+---
+
+## Exercise 5.8 Problem 2
+we first create a function to see if a matix has its inverse matrix:
+```{r}
+f <- function(m) class(try(solve(m),silent=T))=="matrix"
+```
+now create the matrix X and probability p
+Set
+```{r}
+X <- rbind(c(1, -1/4), c(-1/4, 1))  
+p <- c(0.5, 0)
+```
+To get the linear hessian $XtX$ be well condition, 
+```{r}
+A = t(X)%*%X
+f(A)
+```
+According to the book, the logistic variation of Hessian matrix is 
+$$X'diag(p(1-p))X$$
+```{r}
+B <- t(X)%*%diag(p*(1-p))%*%X
+f(B)
+```
+In this way，the linear Hessian (XtX) is well-conditioned, the function we created to check if a matrix has a inverse returns a "True", but the logistic variation is not, which does not have a inverse matrix.
+
+##Exercise 5.8 Problem 4
+```{r}
+#modify the function 
+casl_glm_irwls <- function(X, y, family, maxit=25, tol=1e-10,lamda){
+  beta <- rep(0,ncol(X))
+  for(j in seq_len(maxit)){
+    b_old <- beta
+    eta <- X %*% beta
+  mu <- family$linkinv(eta)
+  mu_p <- family$mu.eta(eta)
+  z <- eta + (y - mu) / mu_p
+  W <- as.numeric(mu_p^2 / family$variance(mu))
+  XtX <- crossprod(X, diag(W) %*% X)
+  V <-  XtX + 2*diag(rep(lambda, dim(XtX)[1]))
+  Xtz <- crossprod(X, W * z)
+  beta <- solve(XtX, Xtz)
+    if(sqrt(crossprod(beta - b_old)) < tol) break
+  }
+beta 
+}
+#test the function
+n <- 1000; p <- 3
+beta <- c(0.2, 2, 1)
+X <- cbind(1, matrix(rnorm(n * (p- 1)), ncol = p - 1))
+mu <- 1 - pcauchy(X %*% beta)
+y <- as.numeric(runif(n) > mu)
+beta <- casl_glm_irwls_glm(X, y,family = binomial(link = "cauchit"),lamda = 0.5)
+beta
+```
