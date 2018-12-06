@@ -21,3 +21,7 @@ library(bis557)
 fit <- ridge_reg(Sepal.Length ~.,1.2, iris)
 summary(fit)
 ```
+The third thing is the homework in class, 
+
+The fourth thing is also the homework, but we create a class called "sparse.matrix" that can give the out
+put of the addition, multiplication, and transpose operations. 
