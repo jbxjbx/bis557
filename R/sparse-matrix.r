@@ -29,7 +29,6 @@ sparse.matrix<-function(i,j,x,dims=NULL){
 #' @docType methods
 #' @rdname sparse.matrix-methods
 #' @aliases +, sparse.matrix ,sparse.matrix-method
-#' @usage \method{+}{sparse.matrix,sparse.matrix}(e1,e2)
 #' @inheritParams e1,e2 matrix addtion
 #' 
 setMethod("+",signature(e1= "sparse.matrix", e2 = "sparse.matrix"), function(e1, e2){
@@ -57,7 +56,6 @@ setMethod("+",signature(e1= "sparse.matrix", e2 = "sparse.matrix"), function(e1,
 #' @docType methods
 #' @rdname sparse.matrix-methods
 #' @aliases t, sparse.matrix,ANY-method
-#' #' @usage \method{t}{sparse.matrix}(x)
 #' @inheritParams x the transpose of matrix
 #'
 setMethod("t",signature="sparse.matrix",definition=function(x){
@@ -80,7 +78,6 @@ setMethod("t",signature="sparse.matrix",definition=function(x){
 #' @docType methods
 #' @rdname sparse.matrix-methods
 #' @aliases %*%, sparse.matrix,sparse.matrix-method
-#' @usage \method{%*%}{sparse.matrix}(x,y)
 #' @inheritParams x,y matrix multiplication
 #' 
 

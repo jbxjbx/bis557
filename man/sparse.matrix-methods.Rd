@@ -9,15 +9,12 @@
 \alias{t,sparse.matrix-method}
 \alias{t,}
 \alias{sparse.matrix,ANY-method}
-\alias{#'}
-\alias{@usage}
-\alias{\method{t}{sparse.matrix}(x)}
 \alias{\%*\%,sparse.matrix,sparse.matrix-method}
 \alias{\%*\%,}
 \alias{sparse.matrix,sparse.matrix-method}
 \title{Homework 4  - Question 3   - Reference to the code structure of setting classes by Justina Xie}
 \usage{
-\method{+}{sparse.matrix,sparse.matrix}(e1,e2)
+\S4method{+}{sparse.matrix,sparse.matrix}(e1, e2)
 
 \S4method{t}{sparse.matrix}(x)
 
