@@ -28,8 +28,8 @@ sparse.matrix<-function(i,j,x,dims=NULL){
 #'
 #' @docType methods
 #' @rdname sparse.matrix-methods
-#' @aliases +, sparse.matrix
-#' @usage {+}{sparse.matrix,sparse.matrix}(e1,e2)
+#' @aliases +, sparse.matrix ,sparse.matrix-method
+#' @usage \method{+}{sparse.matrix,sparse.matrix}(e1,e2)
 #' @inheritParams e1,e2 matrix addtion
 #' 
 setMethod("+",signature(e1= "sparse.matrix", e2 = "sparse.matrix"), function(e1, e2){
@@ -53,11 +53,12 @@ setMethod("+",signature(e1= "sparse.matrix", e2 = "sparse.matrix"), function(e1,
 
 #' Transpose
 #'
-#' @param x a \code{sparse.matrix} object
+#' @param y,e1,e2 a \code{sparse.matrix} object
 #' @docType methods
 #' @rdname sparse.matrix-methods
 #' @aliases t, sparse.matrix,ANY-method
-#' @inheritParams x from the transpose of matrix
+#' #' @usage \method{t}{sparse.matrix}(x)
+#' @inheritParams x the transpose of matrix
 #'
 setMethod("t",signature="sparse.matrix",definition=function(x){
   dims<-c(x@dims[2],x@dims[1])
@@ -79,7 +80,7 @@ setMethod("t",signature="sparse.matrix",definition=function(x){
 #' @docType methods
 #' @rdname sparse.matrix-methods
 #' @aliases %*%, sparse.matrix,sparse.matrix-method
-#' @usage {%*%}{sparse.matrix}(x,y)
+#' @usage \method{%*%}{sparse.matrix}(x,y)
 #' @inheritParams x,y matrix multiplication
 #' 
 
