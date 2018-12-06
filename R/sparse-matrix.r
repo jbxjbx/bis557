@@ -5,7 +5,7 @@
 #' @param x value of the matrix
 #' @return a the matrix of the operation: addition, multiplication and transpose
 #' @rdname sparse.matrix-methods
-#' @importFrom methods 
+#' @importFrom methods new
 #' @export sparse.matrix
 #' @docType methods
 #' 
@@ -53,11 +53,10 @@ setMethod("+",signature(e1= "sparse.matrix", e2 = "sparse.matrix"), function(e1,
 
 #' Transpose
 #'
-#' @param x \code{sparse.matrix} object
+#' @param x a \code{sparse.matrix} object
 #' @docType methods
 #' @rdname sparse.matrix-methods
 #' @aliases t, sparse.matrix,ANY-method
-#' @usage {t}{sparse.matrix}(x)
 #' @inheritParams x from the transpose of matrix
 #'
 setMethod("t",signature="sparse.matrix",definition=function(x){
