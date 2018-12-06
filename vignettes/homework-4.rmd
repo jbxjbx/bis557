@@ -35,6 +35,33 @@ f(B)
 In this way，the linear Hessian (XtX) is well-conditioned, the function we created to check if a matrix has a inverse returns a "True", but the logistic variation is not, which does not have a inverse matrix.
 
 ##Exercise 5.8 Problem 4
+Accordign to the book and reference to the help and code by Yingnan Lv, 
+$$
+l'(y) = l'(y) - \lambda||\beta||_2^2.
+$$
+We take the derivative on $\beta$ first, then we will ahve 
+$$
+\Delta_{\beta}l'(y) = X^t(y-Ey) - 2\lambda\beta.
+$$
+then we take the second derivative, and we will have 
+
+$$
+h(l') = \frac{\delta^2 l'(y)}{\delta \beta_k \delta \beta_j}
+= - X_t \cdot \text{diag}(Var(y)) \cdot X - 2\lambda I_{p}
+$$
+
+then we import the derivative and hessian matrix to get the new beta and find out the relation between V and XtX
+
+$$
+\begin{aligned}
+\beta^{(k+1)}&=\beta^{(k)}-H^{-1}(l)(\beta^{(k)})\triangle_{\beta}l(y)(\beta^{(k)})\\
+&=\beta^{(k)}+[X^t\text{diag}(var(y^{(k)}))X+2\lambda I_{p}]^{-1}(X^t(y-{E}y^{(k)})-2\lambda\beta)\\
+&=V^{-1}X^tW(X\beta^{k}+W^{-1}(y-{E}y^{k}))\\
+&=\frac {X^tWz}{(X^tWX+2\lambda I_{p})}
+\end{aligned}
+$$
+hence we have  $V = X^t W X + 2 \lambda I_{p}$
+and then we change it in the casl_glm_irwls function as below.
 ```{r}
 #modify the function 
 casl_glm_irwls <- function(X, y, family, maxit=25, tol=1e-10,lamda){
