@@ -1,4 +1,4 @@
-#' Homework 4  - Question 3   - Referebce to the code structure of setting classes by Justina Xie
+#' Homework 4  - Question 3   - Reference to the code structure of setting classes by Justina Xie
 #' 
 #' @slot dims the dimensions of the matrix
 #' @name sparse.matrix
