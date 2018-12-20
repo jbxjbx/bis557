@@ -14,7 +14,7 @@ self_contained: yes
 %\VignetteIndexEntry{homework 5 vignette}
 -->
 
-#Question 1
+### Question 1
 ```{r}
 # install and load packages
 library(keras)
@@ -63,7 +63,7 @@ preds2 <- predict(fit2$glmnet.fit, x_test2, s = fit2$lambda.min, type = "class")
 t2 <- table(as.vector(preds2), y_test)
 sum(diag(t2)) / sum(t2)
 ```
-The accuracy has been improved from 0.8556 to 0.8566, which is a slight improvement.
+The accuracy has been improved from 0.8556 to 0.8566, which is a slight improvement by adding the mean and std. 
 Moreover, we could also use the Convolutional Neural Network(CNN) to predict. I actually do not have an idea how to perform it.
 Credit to the code of BIS557 classmate Hongyu Li: https://github.com/hongyuli94/bis557/blob/master/vignettes/homework-5.rmd
 I forked the code here, and add some revision to make it  more conise and run more quickly.
@@ -133,19 +133,20 @@ print (valid_prediction_acc_0 )
 according to the ouput, the in sample prediction is 0.9828333, and the out out sample predication accuracy is 0.9815.
 Therefore, we may see that CNN method greatly improve the accuracy of predication in the case.
 
-#Question 2
+### Question 2
 To change to parameters, we firstly need to have the original model from 8.10.4，reference to the code in textbook
 ```{r}
 # import the data
-y_train <- data.frame(train_id="train", class=y_train, class_name=letters[as.numeric(y_train)])
-y_valid <- data.frame(train_id="test", class=y_test, class_name=letters[as.numeric(y_test)])
+y_train <- data.frame(train_id="train", class_name=letters[as.numeric(y_train)])
+y_valid <- data.frame(train_id="test", class_name=letters[as.numeric(y_test)])
 emnist <- rbind(y_train, y_valid)
-# Reshape x28
+
+# use the rbind to reshape
 x28 <- rbind(x_train, x_test)
 dim(x28) <- c(120000, 28, 28, 1)
-#change to categorical value of the class
-Y <- to_categorical(emnist$class)
-#split the data
+
+
+#split the data according the code from textbook
 X <- t(apply(x28, 1, cbind))
 X_train <- X[emnist$train_id == "train",]
 dim(X_train) <- c(60000, 28, 28, 1)
@@ -154,7 +155,7 @@ dim(X_valid) <- c(10000, 28, 28, 1)
 Y_train <- Y[emnist$train_id == "train",]
 Y_valid <- Y[emnist$train_id != "train",]
 
-# original model
+# the original model
 model <- keras_model_sequential()
 model %>%
 layer_conv_2d(filters = 32, kernel_size = c(2,2),
@@ -208,7 +209,7 @@ layer_activation(activation = "relu") %>%
 layer_conv_2d(filters = 32, kernel_size = c(4,4),
 padding = "same") %>%
 layer_activation(activation = "relu") %>%
-layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+layer_max_pooling_2d(pool_size = c(4, 4)) %>%
 layer_dropout(rate = 0.5) %>%
 layer_conv_2d(filters = 32, kernel_size = c(4,4),
 padding = "same") %>%
@@ -231,7 +232,7 @@ model %>% compile(loss = 'categorical_crossentropy',
                   optimizer = optimizer_rmsprop(),
                   metrics = c('accuracy'))
 history <- model %>% 
-  fit(X_train, Y_train, epochs = 5, validation_data = list(X_valid, Y_valid))
+  fit(X_train, Y_train, epochs = 10, validation_data = list(X_valid, Y_valid))
 # Prediction accuracy
 emnist$predict <- predict_classes(model, X)
 tapply(emnist$predict == emnist$class, emnist$train_id,mean) 
@@ -239,7 +240,7 @@ tapply(emnist$predict == emnist$class, emnist$train_id,mean)
 According to the output, by adjusting the kernel size and drop-out rate, we improved the accuracy,
 we have the in-sample accuracy from 0.90436 to 0.91223, validation accuracy from 0.87455 to 0.89065. 
 
-#Question 3
+### Question 3
 Reference to textbook Page 211, and the code solution by Honyu Li, Yin Guo, Justina Xie.
 P.S.: To be honest, I actually did not know how to solve this question, I fully understood it by learning the ways other classmate solved it on Github. Here I forked the code, and revised it to be more comprehensive and concise. 
 For the original code, please check:
